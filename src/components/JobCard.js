@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router';
+import React from 'react';
+import { Link } from "react-router-dom";
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,6 +10,7 @@ import SkillsList from './SkillsList';
 import Stack from '@mui/material/Stack';
 import { Divider } from '@mui/material';
 import { styled } from "@mui/material/styles";
+
 
 
 const CardStyle = styled(Card)(({ theme }) => ({
@@ -24,7 +25,9 @@ const CardStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function JobCard({ job }) {
-    const navigate = useNavigate();
+
+    // const location = useLocation();
+
     return (
         <CardStyle variant="outlined" >
             <Stack
@@ -51,7 +54,8 @@ export default function JobCard({ job }) {
                     <Button
                         variant="contained"
                         sx={{ width: "130px", backgroundColor: "#df9e0b" }}
-                        onClick={() => navigate(`/job/${job.id}`)}
+                        as={Link}
+                        to={`/jobs/${job.id}`}
                     >
                         Learn More
                     </Button>

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -7,9 +8,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { AuthContext } from '../auth/AuthProvider';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -52,15 +54,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopNavigationBar() {
-    const [isSignin, setIsSignin] = useState(false)
+
+    const navigate = useNavigate();
 
     const handlClickSignin = (event) => {
-        //Need to change
-        setIsSignin(true)
+        navigate("/signin");
     };
+
+    const auth = useContext(AuthContext);
+
     const handlClickSignout = (event) => {
-        //Need to change
-        setIsSignin(false)
+        auth.signout(() => {
+            navigate("/");
+        });
     };
 
 
@@ -73,6 +79,9 @@ export default function TopNavigationBar() {
                         noWrap
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
+                        onClick={() => {
+                            navigate("/");
+                        }}
                     >
                         Job Routing
                     </Typography>
@@ -86,26 +95,34 @@ export default function TopNavigationBar() {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Button
-                        onClick={isSignin ? handlClickSignout : handlClickSignin}
-                        variant="contained"
-                        startIcon={isSignin ? <LogoutIcon /> : <LoginIcon />}
-                        sx={{
-                            backgroundColor: "#423e3e",
-                            display: { xs: 'none', sm: 'none', md: 'flex', lg: "flex" },
-                        }}
-                    >
-                        {isSignin ? 'SIGN OUT' : 'SIGN IN'}
-                    </Button>
-                    <Button
-                        onClick={isSignin ? handlClickSignout : handlClickSignin}
-                        variant="contained"
-                        startIcon={isSignin ? <LogoutIcon /> : <LoginIcon />}
-                        sx={{
-                            backgroundColor: "#423e3e",
-                            display: { xs: 'flex', sm: 'flex', md: 'none' },
-                        }}
-                    />
+                    {auth?.user ? (
+                        <>
+                            <Avatar
+                                src="/images/avatar/1.jpg"
+                                sx={{ width: 40, height: 40, m: 1 }}
+                            />
+                            <Typography variant="body1" sx={{ m: 2 }}>
+                                Hi {auth.user} !
+                            </Typography>
+                            <Button
+                                onClick={handlClickSignout}
+                                variant="contained"
+                                startIcon={<LogoutIcon />}
+                            >
+                                SIGN OUT
+                            </Button>
+
+                        </>
+                    ) : (
+                        <Button
+                            onClick={handlClickSignin}
+                            variant="contained"
+                            startIcon={<LoginIcon />}
+                        >
+                            SIGN IN
+                        </Button>
+                    )}
+
 
                 </Toolbar>
             </AppBar>
