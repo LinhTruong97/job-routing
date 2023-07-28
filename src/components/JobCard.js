@@ -11,23 +11,19 @@ import Stack from '@mui/material/Stack';
 import { Divider } from '@mui/material';
 import { styled } from "@mui/material/styles";
 
-
-
 const CardStyle = styled(Card)(({ theme }) => ({
     boxShadow: "none",
     border: "1px solid black",
     width: "100%",
     maxWidth: "350px",
     minWidth: "270px",
-    height: "280px",
+    height: "270px",
     margin: "auto",
+    paddinBottom: "5px",
     backgroundColor: theme.palette.primary.light,
 }));
 
 export default function JobCard({ job }) {
-
-    // const location = useLocation();
-
     return (
         <CardStyle variant="outlined" >
             <Stack
@@ -45,7 +41,7 @@ export default function JobCard({ job }) {
                         {job.title}
                     </Typography>
                     <Divider />
-                    <SkillsList job={job} />
+                    <SkillsList skills={job.skills} />
                     <Typography variant="body2">
                         {job.description}
                     </Typography>
@@ -53,8 +49,8 @@ export default function JobCard({ job }) {
                 <CardActions>
                     <Button
                         variant="contained"
-                        sx={{ width: "130px", backgroundColor: "#df9e0b" }}
-                        as={Link}
+                        sx={{ width: "130px", backgroundColor: "#F88379" }}
+                        component={Link}
                         to={`/jobs/${job.id}`}
                     >
                         Learn More

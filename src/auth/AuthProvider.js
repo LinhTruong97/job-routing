@@ -22,7 +22,7 @@ function AuthProvider({ children }) {
             callback();
         });
     };
-    let value = { user, signin, signout };
+    let value = { user, password, signin, signout };
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,10 +8,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { AuthContext } from '../auth/AuthProvider';
+import MenuIcon from "@mui/icons-material/Menu";
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -56,19 +58,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function TopNavigationBar() {
 
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const q = searchParams.get("q");
+
+    const [anchorElNav, setAnchorElNav] = useState(null);
+
 
     const handlClickSignin = (event) => {
         navigate("/signin");
     };
-
     const auth = useContext(AuthContext);
-
     const handlClickSignout = (event) => {
         auth.signout(() => {
             navigate("/");
         });
     };
 
+    const handleInputChange = (event) => {
+        const newSearch = event.target.value;
+        if (newSearch) {
+            setSearchParams({ q: newSearch });
+        } else {
+            setSearchParams({});
+        }
+    };
+
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
 
     return (
         <Box>
@@ -85,45 +106,129 @@ export default function TopNavigationBar() {
                     >
                         Job Routing
                     </Typography>
+
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
+                            type="text"
+                            onChange={handleInputChange}
+                            name="q"
+                            placeholder="Search"
+                            defaultValue={q ?? ""}
+                            inputProps={{ "arial-label": "search" }}
                         />
                     </Search>
+
                     <Box sx={{ flexGrow: 1 }} />
-                    {auth?.user ? (
-                        <>
-                            <Avatar
-                                src="/images/avatar/1.jpg"
-                                sx={{ width: 40, height: 40, m: 1 }}
-                            />
-                            <Typography variant="body1" sx={{ m: 2 }}>
-                                Hi {auth.user} !
-                            </Typography>
+                    <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                        {auth?.user ? (
+                            <>
+                                <Typography variant="body1" sx={{ m: 2 }}>
+                                    Hi {auth.user} !
+                                </Typography>
+                                <Button
+                                    onClick={handlClickSignout}
+                                    variant="contained"
+                                    startIcon={<LogoutIcon />}
+                                >
+                                    SIGN OUT
+                                </Button>
+
+                            </>
+                        ) : (
                             <Button
-                                onClick={handlClickSignout}
+                                onClick={handlClickSignin}
                                 variant="contained"
-                                startIcon={<LogoutIcon />}
+                                startIcon={<LoginIcon />}
+                                style={{ backgroundColor: '#121212' }}
                             >
-                                SIGN OUT
+                                SIGN IN
                             </Button>
+                        )}
+                    </Box>
 
-                        </>
-                    ) : (
-                        <Button
-                            onClick={handlClickSignin}
-                            variant="contained"
-                            startIcon={<LoginIcon />}
+                    <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleOpenNavMenu}
+                            color="inherit"
                         >
-                            SIGN IN
-                        </Button>
-                    )}
+                            <MenuIcon />
+                        </IconButton>
+                        {auth?.user ? (
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorElNav}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left"
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left"
+                                }}
+                                open={Boolean(anchorElNav)}
+                                onClose={handleCloseNavMenu}
+                                sx={{
+                                    display: { xs: "block", md: "none" }
+                                }}
+                            >
+                                <MenuItem>
+                                    <>
+                                        <Typography variant="body1" sx={{ m: 2 }}>
+                                            Hi {auth.user} !
+                                        </Typography>
 
+                                        <MenuItem>
+                                            <Button
+                                                onClick={handlClickSignout}
+                                                variant="contained"
+                                                startIcon={<LogoutIcon />}
+                                            >
+                                                SIGN OUT
+                                            </Button>
+                                        </MenuItem>
+                                    </>
+                                </MenuItem>
 
+                            </Menu>) : (
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorElNav}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left"
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left"
+                                }}
+                                open={Boolean(anchorElNav)}
+                                onClose={handleCloseNavMenu}
+                                sx={{
+                                    display: { xs: "block", md: "none" }
+                                }}
+                            >
+                                <MenuItem>
+                                    <Button
+                                        onClick={handlClickSignin}
+                                        variant="contained"
+                                        startIcon={<LoginIcon />}
+                                    >
+                                        SIGN IN
+                                    </Button>
+                                </MenuItem>
+                            </Menu>)
+                        }
+
+                    </Box>
                 </Toolbar>
             </AppBar>
         </Box>

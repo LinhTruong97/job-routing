@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import SkillsList from "./SkillsList";
+import { LoadingButton } from "@mui/lab";
 
 const style = {
     position: "absolute",
@@ -22,17 +23,25 @@ function JobDetailModal() {
     const navigate = useNavigate();
     const location = useLocation();
     const [job, setJob] = useState(null);
+    const [loading, setLoading] = useState(false);
     const { id } = useParams();
 
     let from = location.state?.from?.pathname || "/";
 
     useEffect(() => {
         const fetchJob = async () => {
-            const res = await fetch(
-                `https://my-json-server.typicode.com/LinhTruong97/jobs-json-server/jobs/${id}`
-            );
-            const data = await res.json();
-            setJob(data);
+            setLoading(true);
+            try {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                const res = await fetch(
+                    `https://my-json-server.typicode.com/LinhTruong97/jobs-json-server/jobs/${id}`
+                );
+                const data = await res.json();
+                setJob(data);
+            } catch (error) {
+                console.log(error)
+            }
+            setLoading(false);
         };
         fetchJob();
     }, [id]);
@@ -56,19 +65,29 @@ function JobDetailModal() {
                             border: "none",
                             boxShadow: 0,
                             backgroundColor: (theme) => theme.palette.primary.light,
-                            color: (theme) => theme.palette.common.white,
+                            color: (theme) => theme.palette.common.white
                         }}
                     >
-                        <CardContent>
-                            <Typography variant="h5" component="div">
-                                {job?.title}
-                            </Typography>
-                            <SkillsList job={job} />
-                            <Typography>{job?.description}</Typography>
-                            <Typography variant="h6" component="div">
-                                City: {job?.city}
-                            </Typography>
-                        </CardContent>
+                        {loading ? (
+                            <Box
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                                minHeight="50px"
+                            >
+                                <LoadingButton loading variant="text" />
+                            </Box>
+                        ) : (
+                            <CardContent sx={{ textAlign: "center" }} >
+                                <Typography variant="h5" component="div">
+                                    {job?.title}
+                                </Typography>
+                                <SkillsList skills={job?.skills} />
+                                <Typography>{job?.description} </Typography>
+                                <Typography variant="subtitle" component="div" sx={{ mt: 1 }}>
+                                    City: {job?.city}
+                                </Typography>
+                            </CardContent>)}
                     </Card>
                 </Box>
             </Modal>

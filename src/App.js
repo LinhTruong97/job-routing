@@ -1,10 +1,10 @@
 import React from 'react'
+import "./App.css"
 
 import { Routes, Route } from "react-router-dom";
+
 import HomePage from './pages/HomePage'
-
 import JobCardModal from "./components/JobCardModal";
-
 import AuthProvider from './auth/AuthProvider';
 import SigninFormModal from './components/SigninFormModal';
 import Layout from './Layout/Layout';
@@ -16,22 +16,25 @@ function App() {
     return (
         <div>
             <AuthProvider>
-                <Routes>
+                <Routes >
                     <Route element={<Layout />}>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/signin" element={<HomePage />} />
-                        <Route path="/jobs/:id" element={<HomePage />} />
-                    </Route>
-                </Routes>
-                <Routes>
-                    <Route>
-                        <Route path="/signin" element={<SigninFormModal />} />
+                        <Route path="/" element={<HomePage />} >
+                            <Route path="/signin" element={<SigninFormModal />} />
+                            <Route
+                                path="/jobs/:id"
+                                element={
+                                    <RequireAuth>
+                                        <JobCardModal />
+                                    </RequireAuth>
+                                }
+                            />
+                        </Route>
                         <Route
-                            path="/jobs/:id"
+                            path="*"
                             element={
-                                <RequireAuth>
-                                    <JobCardModal />
-                                </RequireAuth>
+                                <main style={{ padding: '1rem' }}>
+                                    <p>Not found page!</p>
+                                </main>
                             }
                         />
                     </Route>

@@ -14,14 +14,16 @@ const style = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    borderRadius: 2,
-    boxShadow: 24,
-    border: "none",
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid",
+    padding: "20px",
+    borderRadius: "5px",
+    width: "300px"
 };
 
 function SigninFormModal() {
     const auth = useContext(AuthContext);
-    const { signin } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -41,7 +43,7 @@ function SigninFormModal() {
         });
     }
     const handleClose = () => {
-        navigate(from, { replace: true });
+        navigate("/");
     };
 
     return (
@@ -54,16 +56,18 @@ function SigninFormModal() {
             >
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Box sx={style} gap={4}>
-                        <Typography variant="h4" component="div">
+                        <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
                             Sign in
                         </Typography>
                         <FTextField
                             name="username"
                             label="Username"
+                            sx={{ m: "auto" }}
                         />
                         <FTextField
                             name="password"
                             label="Password"
+                            sx={{ m: "auto" }}
                             type={showPassword ? "text" : "password"}
                             InputProps={{
                                 endAdornment: (
@@ -83,7 +87,7 @@ function SigninFormModal() {
                         <Button
                             type='submit'
                             variant='contained'
-                            sx={{ m: 1, width: "10ch", backgroundColor: "rgb(215, 71, 66)" }}
+                            sx={{ m: "auto", width: "50%", backgroundColor: "rgb(215, 71, 66)" }}
                         >
                             Sign in
                         </Button>

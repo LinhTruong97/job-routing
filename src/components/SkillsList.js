@@ -9,7 +9,7 @@ const ListItem = styled("li")(() => ({
 
 const Skills = styled("ul")(({ theme }) => ({
     display: "flex",
-    justifyContent: "start",
+    justifyContent: "center",
     flexWrap: "wrap",
     listStyle: "none",
 
@@ -17,7 +17,7 @@ const Skills = styled("ul")(({ theme }) => ({
 }));
 
 
-function SkillsList({ job }) {
+function SkillsList({ skills }) {
     return (
         <Skills
             sx={{
@@ -26,13 +26,13 @@ function SkillsList({ job }) {
                 m: 0,
             }}
         >
-            {job.skills?.slice(0, 4).map((skill) => (
+            {skills?.slice(0, 4).map((skill) => (
                 <ListItem key={skill}>
                     <Chip
                         size="small"
                         color="primary"
                         label={skill}
-                        sx={{ paddingBottom: "2px", backgroundColor: "#df4747" }}
+                        sx={{ paddingBottom: "2px", backgroundColor: "#9B524C" }}
                     />
                 </ListItem>
             ))}

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import TopNavigationBar from "../components/TopNavigationBar";
 
+
 const style = {
     container: {
         maxWidth: "1140px",
