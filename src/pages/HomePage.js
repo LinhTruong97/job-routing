@@ -20,7 +20,7 @@ function HomePage() {
     const [totalPages, setTotalPages] = useState(1);
     const [currentJobs, setCurrentJobs] = useState([]);
     const [pages, setPages] = useState(1);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const q = searchParams.get("q");
 
     useEffect(() => {
